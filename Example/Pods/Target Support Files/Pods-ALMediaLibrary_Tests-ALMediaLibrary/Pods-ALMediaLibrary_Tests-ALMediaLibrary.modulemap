@@ -1,0 +1,6 @@
+framework module ALMediaLibrary {
+  umbrella header "Pods-ALMediaLibrary_Tests-ALMediaLibrary-umbrella.h"
+
+  export *
+  module * { export * }
+}

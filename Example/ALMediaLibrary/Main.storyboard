@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="whP-gf-Uak">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E33b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="whP-gf-Uak">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
@@ -16,8 +15,35 @@
                     <view key="view" contentMode="scaleToFill" id="TpU-gO-2f1">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X3o-cC-aMm">
+                                <rect key="frame" x="177" y="28" width="247" height="318"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="318" id="YoN-Mm-HZv"/>
+                                    <constraint firstAttribute="width" constant="247" id="cri-X1-9cy"/>
+                                </constraints>
+                            </imageView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wcJ-FG-O83">
+                                <rect key="frame" x="148" y="384" width="305" height="183"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="305" id="jy2-jw-jUN"/>
+                                    <constraint firstAttribute="height" constant="183" id="s72-Cs-MfO"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerY" secondItem="X3o-cC-aMm" secondAttribute="centerY" constant="113" id="8CS-hn-1dk"/>
+                            <constraint firstAttribute="centerX" secondItem="wcJ-FG-O83" secondAttribute="centerX" constant="-0.5" id="BSX-qx-qJB"/>
+                            <constraint firstAttribute="centerX" secondItem="X3o-cC-aMm" secondAttribute="centerX" constant="-0.5" id="Bar-Iy-owm"/>
+                            <constraint firstAttribute="centerY" secondItem="wcJ-FG-O83" secondAttribute="centerY" constant="-175.5" id="EEr-2H-wL8"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="X3o-cC-aMm" id="h0n-IF-ICP"/>
+                        <outlet property="playerView" destination="wcJ-FG-O83" id="U5q-d2-8iN"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tc2-Qw-aMS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

@@ -3,6 +3,7 @@ use_frameworks!
 
 target 'ALMediaLibrary_Example', :exclusive => true do
   pod "ALMediaLibrary", :path => "../"
+  pod 'MBProgressHUD', '~> 0.9.1'
 end
 
 target 'ALMediaLibrary_Tests', :exclusive => true do

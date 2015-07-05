@@ -1,0 +1,17 @@
+PODS:
+  - ALMediaLibrary (0.1.0)
+  - MBProgressHUD (0.9.1)
+
+DEPENDENCIES:
+  - ALMediaLibrary (from `../`)
+  - MBProgressHUD (~> 0.9.1)
+
+EXTERNAL SOURCES:
+  ALMediaLibrary:
+    :path: ../
+
+SPEC CHECKSUMS:
+  ALMediaLibrary: e4dfe3c53a9a2cf25f27457ef08650b010bed333
+  MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
+
+COCOAPODS: 0.37.2

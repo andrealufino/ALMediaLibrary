@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Background" translatesAutoresizingMaskIntoConstraints="NO" id="x6A-c3-iUR">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Camera" translatesAutoresizingMaskIntoConstraints="NO" id="oeW-9o-qLE">
+                    <rect key="frame" x="175" y="78" width="251" height="199"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="oeW-9o-qLE" secondAttribute="height" multiplier="251:199" id="Uhc-kz-CAG"/>
+                    </constraints>
+                </imageView>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="ALMediaLibrary" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="30" translatesAutoresizingMaskIntoConstraints="NO" id="pOp-jY-cL2">
+                    <rect key="frame" x="74" y="384" width="452" height="109"/>
+                    <constraints>
+                        <constraint firstAttribute="width" secondItem="pOp-jY-cL2" secondAttribute="height" multiplier="452:109" id="iRx-4S-AEm"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="AvenirNext-UltraLight" family="Avenir Next" pointSize="62"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="x6A-c3-iUR" secondAttribute="bottom" id="2BZ-cP-mXh"/>
+                <constraint firstItem="x6A-c3-iUR" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="AtM-4L-rRi"/>
+                <constraint firstItem="pOp-jY-cL2" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="74" id="BlN-0L-Htg"/>
+                <constraint firstAttribute="trailing" secondItem="pOp-jY-cL2" secondAttribute="trailing" constant="74" id="GbA-cP-lzN"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="pOp-jY-cL2" secondAttribute="trailing" constant="20" id="JJC-ej-Kmx"/>
+                <constraint firstItem="oeW-9o-qLE" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="175" id="Oax-7m-YFw"/>
+                <constraint firstItem="x6A-c3-iUR" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Qoq-9a-p64"/>
+                <constraint firstAttribute="centerX" secondItem="oeW-9o-qLE" secondAttribute="centerX" constant="-0.5" id="TAE-SA-JoW"/>
+                <constraint firstAttribute="trailing" secondItem="oeW-9o-qLE" secondAttribute="trailing" constant="174" id="YAz-Ih-LYx"/>
+                <constraint firstAttribute="centerY" secondItem="pOp-jY-cL2" secondAttribute="centerY" constant="-138.5" id="ZLe-BX-m3N"/>
+                <constraint firstItem="pOp-jY-cL2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="iN0-l3-epB" secondAttribute="leading" constant="20" id="Zdt-wC-RAa"/>
+                <constraint firstAttribute="bottom" secondItem="pOp-jY-cL2" secondAttribute="bottom" constant="107" id="bAy-eT-dj1"/>
+                <constraint firstItem="pOp-jY-cL2" firstAttribute="top" secondItem="oeW-9o-qLE" secondAttribute="bottom" constant="107" id="h59-FV-0hG"/>
+                <constraint firstItem="oeW-9o-qLE" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="78" id="iX6-ig-vxJ"/>
+                <constraint firstAttribute="trailing" secondItem="x6A-c3-iUR" secondAttribute="trailing" id="paw-yM-Mta"/>
+                <constraint firstAttribute="centerX" secondItem="pOp-jY-cL2" secondAttribute="centerX" id="rzy-6i-crv"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="Oax-7m-YFw"/>
+                    <exclude reference="YAz-Ih-LYx"/>
+                    <exclude reference="BlN-0L-Htg"/>
+                    <exclude reference="GbA-cP-lzN"/>
+                </mask>
+            </variation>
+        </view>
+    </objects>
+    <resources>
+        <image name="Background" width="320" height="564"/>
+        <image name="Camera" width="304" height="241"/>
+    </resources>
+</document>

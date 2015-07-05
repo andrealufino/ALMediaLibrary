@@ -10,4 +10,7 @@
 
 @interface ALViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UIView *playerView;
+
 @end
