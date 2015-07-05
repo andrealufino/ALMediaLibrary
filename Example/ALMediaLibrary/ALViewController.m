@@ -23,8 +23,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    /*! Add the hud for the loading */
     MBProgressHUD *progressHUDImage = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
+    /*! Fetch photos from library */
     [[ALMediaManager sharedManager] allPhotos:^(NSArray *assets, NSError *error) {
         
         [progressHUDImage hide:YES];
@@ -33,14 +35,17 @@
         hud.labelText = @"Loading...";
         hud.mode = MBProgressHUDModeAnnularDeterminate;
         
+        /*! Get a casual asset */
         ALMediaAsset *asset = assets[4555];
         
+        /*! Create the image options and customize it */
         ALImageRequestOptions *imageOptions = [ALImageRequestOptions bestQualityOptions];
         
         imageOptions.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             hud.progress = progress;
         };
         
+        /*! Retrieve the image from asset */
         [[ALMediaManager sharedManager] imageForAsset:asset
                                                  size:ALPhotoSizeMaximum
                                           contentMode:ALImageContentModeDefault
@@ -55,6 +60,7 @@
     
     MBProgressHUD *progressHUDVideo = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
+    /*! Fetch videos from library */
     [[ALMediaManager sharedManager] allVideos:^(NSArray *assets, NSError *error) {
         
         [progressHUDVideo hide:YES];
@@ -63,14 +69,17 @@
         hud.labelText = @"Loading...";
         hud.mode = MBProgressHUDModeAnnularDeterminate;
         
+        /*! Get a casual asset */
         ALMediaAsset *asset = assets[144];
         
+        /*! Create options to request a video and customize it */
         ALVideoRequestOptions *videoOptions = [ALVideoRequestOptions bestQualityOptions];
         
         videoOptions.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             hud.progress = progress;
         };
         
+        /*! Retrieve the AVPlayerItem from asset */
         [[ALMediaManager sharedManager] playerItemForAsset:asset
                                                    options:videoOptions
                                            completionBlock:^(AVPlayerItem *playerItem, NSDictionary *info) {
