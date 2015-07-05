@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "ALMediaLibrary"
-  s.version          = "0.1.0"
+  s.version          = "0.1.2b"
   s.summary          = "A wrapper around Photos framework"
   s.description      = "This is a wrapper around the Photos framework"
   s.homepage         = "https://github.com/andrealufino/ALMediaLibrary"
