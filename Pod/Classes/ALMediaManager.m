@@ -149,6 +149,12 @@ CGSize ALPhotoSizeThumbnailLarge;
 
 #pragma mark - Public methods
 
++ (ALLibraryAuthorizationStatus)isAuthorized {
+    PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+    
+    return (NSInteger)status;
+}
+
 #pragma mark - All photos and videos
 
 - (void)allPhotos:(void (^)(NSArray *assets, NSError *error))callbackBlock {
