@@ -40,6 +40,30 @@ typedef NS_ENUM(NSInteger, ALImageContentMode){
     ALImageContentModeAspetctFill = 1
 };
 
+/*!
+ *  @brief  Describes the authorization status
+ */
+typedef NS_ENUM(NSInteger, ALLibraryAuthorizationStatus){
+    /*!
+     *  Explicit user permission is required for photo library access, but the user has not yet granted or denied such permission
+     */
+    ALLibraryAuthorizationStatusNotDetermined = 0,
+    /*!
+     *  Your app is not authorized to access the photo library, and the user cannot grant such permission.
+     
+     *  Parental controls or institutional configuration profiles can restrict the user’s ability to grant photo library access to an app
+     */
+    ALLibraryAuthorizationStatusRestricted,
+    /*!
+     *  The user has explicitly denied your app access to the photo library
+     */
+    ALLibraryAuthorizationStatusDenied,
+    /*!
+     *  The user has explicitly granted your app access to the photo library
+     */
+    ALLibraryAuthorizationStatusAuthorized
+};
+
  /*! A Boolean value indicating whether the photo asset data is stored on the local device or must be downloaded from iCloud. (NSNumber) */
 FOUNDATION_EXTERN NSString *const ALPhotoInfoIsInCloud;
 /*! A Boolean value indicating whether the result image is a low-quality substitute for the requested image. (NSNumber) */
@@ -86,6 +110,13 @@ typedef void (^ ALVideoRequestCompletionBlock)(AVPlayerItem *playerItem, NSDicti
  *  The videos array. This property is updated every time you call -allVideos:(void (^)(NSArray *assets, NSError *error))
  */
 @property (nonatomic, strong, readonly) NSMutableArray *videos;
+
+/*!
+ *  @brief  Check the authorization status for the library
+ *
+ *  @return ALLibraryAuthorizationStatus which determines the specific authorization status
+ */
++ (ALLibraryAuthorizationStatus)isAuthorized;
 
 /*!
  *  This method retrieve all the photos from the user photo library and returns it as ALMediaAsset object into an array in the completion block
