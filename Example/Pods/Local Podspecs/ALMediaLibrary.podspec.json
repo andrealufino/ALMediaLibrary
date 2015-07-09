@@ -1,19 +1,19 @@
 {
   "name": "ALMediaLibrary",
-  "version": "0.1.0",
-  "summary": "A short description of ALMediaLibrary.",
-  "description": "                       An optional longer description of ALMediaLibrary\n\n                       * Markdown format.\n                       * Don't worry about the indent, we strip it!\n",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/ALMediaLibrary",
+  "version": "0.1.2b",
+  "summary": "A wrapper around Photos framework",
+  "description": "This is a wrapper around the Photos framework",
+  "homepage": "https://github.com/andrealufino/ALMediaLibrary",
   "license": "MIT",
   "authors": {
     "Andrea Mario Lufino": "andrea.lufino@me.com"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/ALMediaLibrary.git",
-    "tag": "0.1.0"
+    "git": "https://github.com/andrealufino/ALMediaLibrary.git",
+    "tag": "0.1.2b"
   },
   "platforms": {
-    "ios": "7.0"
+    "ios": "8.0"
   },
   "requires_arc": true,
   "source_files": "Pod/Classes/**/*",
@@ -21,5 +21,10 @@
     "ALMediaLibrary": [
       "Pod/Assets/*.png"
     ]
-  }
+  },
+  "frameworks": [
+    "UIKit",
+    "MapKit",
+    "Photos"
+  ]
 }

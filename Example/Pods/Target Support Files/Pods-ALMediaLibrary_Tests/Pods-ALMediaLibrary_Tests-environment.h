@@ -8,7 +8,8 @@
 
 // ALMediaLibrary
 #define COCOAPODS_POD_AVAILABLE_ALMediaLibrary
-#define COCOAPODS_VERSION_MAJOR_ALMediaLibrary 0
-#define COCOAPODS_VERSION_MINOR_ALMediaLibrary 1
-#define COCOAPODS_VERSION_PATCH_ALMediaLibrary 0
+// This library does not follow semantic-versioning,
+// so we were not able to define version macros.
+// Please contact the author.
+// Version: 0.1.2b.
 
