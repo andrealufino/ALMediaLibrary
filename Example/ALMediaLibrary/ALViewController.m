@@ -23,11 +23,11 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    /*! Add the hud for the loading */
+    // Add the hud for the loading
     MBProgressHUD *progressHUDImage = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    /*! Fetch photos from library */
-    [[ALMediaManager sharedManager] allPhotos:^(NSArray *assets, NSError *error) {
+    // Fetch photos from library
+    [[ALMediaManager sharedManager] allPhotosWithOptions:[ALFetchOptions fetchOptionsOnlyLocation] callbackBlock:^(NSArray *assets, NSError *error) {
         
         [progressHUDImage hide:YES];
         
@@ -35,17 +35,21 @@
         hud.labelText = @"Loading...";
         hud.mode = MBProgressHUDModeAnnularDeterminate;
         
-        /*! Get a casual asset */
-        ALMediaAsset *asset = assets[4555];
+        // Get casual index to get casual asset
+        int index = arc4random_uniform((int)assets.count);
         
-        /*! Create the image options and customize it */
+        // Get a casual asset  
+        ALMediaAsset *asset = assets[index];
+        
+        // Create the image options and customize it  
         ALImageRequestOptions *imageOptions = [ALImageRequestOptions bestQualityOptions];
         
+        // Create the progress handler for the image download
         imageOptions.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             hud.progress = progress;
         };
         
-        /*! Retrieve the image from asset */
+        // Retrieve the image from asset  
         [[ALMediaManager sharedManager] imageForAsset:asset
                                                  size:ALPhotoSizeMaximum
                                           contentMode:ALImageContentModeDefault
@@ -60,8 +64,8 @@
     
     MBProgressHUD *progressHUDVideo = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
-    /*! Fetch videos from library */
-    [[ALMediaManager sharedManager] allVideos:^(NSArray *assets, NSError *error) {
+    // Fetch videos from library  
+    [[ALMediaManager sharedManager] allVideosWithOptions:nil callbackBlock:^(NSArray *assets, NSError *error) {
         
         [progressHUDVideo hide:YES];
         
@@ -69,17 +73,17 @@
         hud.labelText = @"Loading...";
         hud.mode = MBProgressHUDModeAnnularDeterminate;
         
-        /*! Get a casual asset */
+        // Get a casual asset  
         ALMediaAsset *asset = assets[144];
         
-        /*! Create options to request a video and customize it */
+        // Create options to request a video and customize it  
         ALVideoRequestOptions *videoOptions = [ALVideoRequestOptions bestQualityOptions];
         
         videoOptions.progressHandler = ^(double progress, NSError *error, BOOL *stop, NSDictionary *info) {
             hud.progress = progress;
         };
         
-        /*! Retrieve the AVPlayerItem from asset */
+        // Retrieve the AVPlayerItem from asset  
         [[ALMediaManager sharedManager] playerItemForAsset:asset
                                                    options:videoOptions
                                            completionBlock:^(AVPlayerItem *playerItem, NSDictionary *info) {
@@ -93,10 +97,6 @@
                                                [self.player play];
                                            }];
     }];
-    
-    
-    
-    [[ALMediaManager sharedManager] photos];
 }
 
 - (void)didReceiveMemoryWarning

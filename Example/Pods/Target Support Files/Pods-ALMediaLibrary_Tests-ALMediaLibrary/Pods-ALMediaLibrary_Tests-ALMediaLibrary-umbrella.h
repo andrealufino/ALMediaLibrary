@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 
+#import "ALFetchOptions.h"
 #import "ALImageRequestOptions.h"
 #import "ALMediaAsset.h"
 #import "ALMediaLibrary.h"

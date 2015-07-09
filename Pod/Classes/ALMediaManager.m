@@ -60,7 +60,10 @@ CGSize ALPhotoSizeThumbnailLarge;
 
 #pragma mark - Fetch photos
 
-- (void)fetchPhotosAsyncWithMediaType:(PHAssetMediaType)mediaType callbackBlock:(void (^)(NSArray *assets, NSError *error))callbackBlock {
+- (void)fetchPhotosAsyncWithMediaType:(PHAssetMediaType)mediaType
+                         fetchOptions:(ALFetchOptions *)options
+                        callbackBlock:(void (^)(NSArray *assets, NSError *error))callbackBlock {
+    
     PHFetchResult *allMediaAssets = [PHAsset fetchAssetsWithMediaType:mediaType
                                                          options:nil];
     
@@ -68,9 +71,24 @@ CGSize ALPhotoSizeThumbnailLarge;
     
     PHAsset *asset2 = allMediaAssets.lastObject;
     
+    // Used to check if there will be returned only objects with a location associated
+    BOOL onlyLocation = NO;
+    
+    // Check if options is not nil and associate its value to internal var
+    if (options)
+        onlyLocation = options.onlyMediaWithLocation;
+    
     [allMediaAssets enumerateObjectsUsingBlock:^(PHAsset *asset, NSUInteger idx, BOOL *stop) {
         ALMediaAsset *mediaAsset = [[ALMediaAsset alloc] initWithAsset:asset];
-        [allMedia addObject:mediaAsset];
+        // If the request is to have only objects with location, create the correct asset
+        if (onlyLocation) {
+            if (asset.location) {
+                [allMedia addObject:mediaAsset];
+            }
+        } else {
+            [allMedia addObject:mediaAsset];
+        }
+        
         if ([asset isEqual:asset2]) {
             if (mediaType == PHAssetMediaTypeImage) {
                 if (_photos)
@@ -81,8 +99,9 @@ CGSize ALPhotoSizeThumbnailLarge;
                     [_videos removeAllObjects];
                 [_videos addObjectsFromArray:allMedia];
             }
-                
+            
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate didFinishFetchMedia:allMedia];
                 callbackBlock ? callbackBlock([allMedia copy], nil) : nil;
             });
             NSLog(@"There are %li assets", (unsigned long)allMedia.count);
@@ -92,7 +111,7 @@ CGSize ALPhotoSizeThumbnailLarge;
 
 #pragma mark - PHDictionary to ALDictionary
 
-/*! This method converts the dictionary returned in a request using the keys of ALMediaLibrary */
+// This method converts the dictionary returned in a request using the keys of ALMediaLibrary
 - (NSDictionary *)wrapPHDictionaryToALDictionary:(NSDictionary *)PHDictionary {
     NSNumber *isInCloud = PHDictionary[PHImageResultIsInCloudKey];
     NSNumber *isDegraded = PHDictionary[PHImageResultIsDegradedKey];
@@ -111,7 +130,7 @@ CGSize ALPhotoSizeThumbnailLarge;
 
 #pragma mark - PHImageRequestOptions to ALImageRequestOptions
 
-/*! This method converts the options of class ALImageRequestOptions to the one used in the Photos framework */
+// This method converts the options of class ALImageRequestOptions to the one used in the Photos framework
 - (PHImageRequestOptions *)convertFromALImageRequestOptions:(ALImageRequestOptions *)options {
     PHImageRequestOptions *imageOptions = [PHImageRequestOptions new];
     imageOptions.version = (PHImageRequestOptionsVersion)options.version;
@@ -131,7 +150,7 @@ CGSize ALPhotoSizeThumbnailLarge;
 
 #pragma mark - PHVideoRequestOptions to ALVideoRequestOptions
 
-/*! This method converts the options of class ALVideoRequestOptions to the one used in the Photos framework */
+// This method converts the options of class ALVideoRequestOptions to the one used in the Photos framework
 - (PHVideoRequestOptions *)convertFromALVideoRequestOptions:(ALVideoRequestOptions *)options {
     PHVideoRequestOptions *videoOptions = [PHVideoRequestOptions new];
     videoOptions.version = (PHVideoRequestOptionsVersion)options.version;
@@ -157,12 +176,17 @@ CGSize ALPhotoSizeThumbnailLarge;
 
 #pragma mark - All photos and videos
 
-- (void)allPhotos:(void (^)(NSArray *assets, NSError *error))callbackBlock {
-    [self fetchPhotosAsyncWithMediaType:PHAssetMediaTypeImage callbackBlock:callbackBlock];
+- (void)allPhotosWithOptions:(ALFetchOptions *)options callbackBlock:(void (^)(NSArray *assets, NSError *error))callbackBlock {
+    [self fetchPhotosAsyncWithMediaType:PHAssetMediaTypeImage
+                           fetchOptions:options
+                          callbackBlock:callbackBlock];
+    [ALFetchOptions fetchOptionsOnlyLocation];
 }
 
-- (void)allVideos:(void (^)(NSArray *, NSError *))callbackBlock {
-    [self fetchPhotosAsyncWithMediaType:PHAssetMediaTypeVideo callbackBlock:callbackBlock];
+- (void)allVideosWithOptions:(ALFetchOptions *)options callbackBlock:(void (^)(NSArray *, NSError *))callbackBlock {
+    [self fetchPhotosAsyncWithMediaType:PHAssetMediaTypeVideo
+                           fetchOptions:options
+                          callbackBlock:callbackBlock];
 }
 
 - (void)allMedia:(void (^)(NSArray *, NSError *))callbackBlock {
