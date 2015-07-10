@@ -10,7 +10,7 @@
 #import <ALMediaLibrary/ALMediaLibrary.h>
 #import <MBProgressHUD/MBProgressHUD.h>
 
-@interface ALViewController ()
+@interface ALViewController () <ALMediaManagerDelegate>
 
 @property (nonatomic, strong) AVPlayer *player;
 
@@ -21,10 +21,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
     
     // Add the hud for the loading
     MBProgressHUD *progressHUDImage = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    // Set delegate of ALMediaManager
+    [[ALMediaManager sharedManager] setDelegate:self];
+    
+    // Use notification center
+    [[ALMediaManager sharedManager] setUseNSNotificationCenter:YES];
+    
+    // Set observer
+    [[NSNotificationCenter defaultCenter] addObserverForName:ALMediaManagerFetchMediaFinished
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      NSArray *array = note.userInfo[ALMediaManagerNotificationUserInfoAssetsKey];
+                                                      NSLog(@"Number of assets from notification : %@", @(array.count));
+                                                  }];
     
     // Fetch photos from library
     [[ALMediaManager sharedManager] allPhotosWithOptions:[ALFetchOptions fetchOptionsOnlyLocation] callbackBlock:^(NSArray *assets, NSError *error) {
@@ -62,6 +76,9 @@
                                       }];
     }];
     
+    
+    // Decomment this to try to get the videos from your library
+    /*
     MBProgressHUD *progressHUDVideo = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     // Fetch videos from library  
@@ -73,8 +90,11 @@
         hud.labelText = @"Loading...";
         hud.mode = MBProgressHUDModeAnnularDeterminate;
         
+        // Get casual index to get casual asset
+        int index = arc4random_uniform((int)assets.count);
+        
         // Get a casual asset  
-        ALMediaAsset *asset = assets[144];
+        ALMediaAsset *asset = assets[index];
         
         // Create options to request a video and customize it  
         ALVideoRequestOptions *videoOptions = [ALVideoRequestOptions bestQualityOptions];
@@ -97,6 +117,8 @@
                                                [self.player play];
                                            }];
     }];
+     */
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -105,6 +127,8 @@
     // Dispose of any resources that can be recreated.
 }
 
+#pragma mark - Player item layer
+
 - (AVPlayerLayer *)playerLayerWithAVPlayer:(AVPlayer *)player {
     AVPlayerLayer *layer = [AVPlayerLayer playerLayerWithPlayer:self.player];
     layer.frame = self.playerView.bounds;
@@ -112,6 +136,20 @@
     layer.videoGravity = AVLayerVideoGravityResizeAspectFill;
     
     return layer;
+}
+
+#pragma mark - ALMediaManager delegate
+
+- (void)didFinishFetchMedia:(NSArray *)assets ofType:(ALMediaAssetType)type {
+    NSLog(@"I'm the delegate! Your assets are %@", @(assets.count));
+}
+
+- (void)didFinishRetrieveImageAsset:(UIImage *)image {
+    NSLog(@"I'm the delegate! Your image has been retrieved!");
+}
+
+- (void)didFinishRetrieveVideoAsset:(AVPlayerItem *)playerItem {
+    NSLog(@"I'm the delegate! You player item has been retrieved!");
 }
 
 @end
