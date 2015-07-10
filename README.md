@@ -19,6 +19,7 @@ All methods work with blocks.
 
 You can also use the delegate and the NSNotificationCenter to listen for the finish of the fetching of all media and even for the single image and player item.
 Look at ALMediaManager.h to see the notifications to listen and for the ALMediaManagerDelegate.
+Note that my advice is to use only one method between these 3. If you choose, for example, the NSNotificationCenter method, pass nil to the completion block and don't set the delegate.
 
 Every class has its own documentation. 
 

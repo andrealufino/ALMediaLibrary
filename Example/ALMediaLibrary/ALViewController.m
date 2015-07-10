@@ -40,7 +40,7 @@
                                                       NSLog(@"Number of assets from notification : %@", @(array.count));
                                                   }];
     
-    // Fetch photos from library
+    // Fetch photos from library using options only with location
     [[ALMediaManager sharedManager] allPhotosWithOptions:[ALFetchOptions fetchOptionsOnlyLocation] callbackBlock:^(NSArray *assets, NSError *error) {
         
         [progressHUDImage hide:YES];
