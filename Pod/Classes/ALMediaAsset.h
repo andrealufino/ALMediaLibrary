@@ -15,6 +15,10 @@
  */
 typedef NS_ENUM(NSInteger, ALMediaAssetType){
     /**
+     *  The file related to the asset cannot be reproduced by iOS
+     */
+    ALMediaAssetTypeUnknown = 0,
+    /**
      *  Indicates the asset is a photo
      */
     ALMediaAssetTypePhoto,
@@ -25,11 +29,7 @@ typedef NS_ENUM(NSInteger, ALMediaAssetType){
     /**
      *  Indicates the asset is an audio file
      */
-    ALMediaAssetTypeAudio,
-    /**
-     *  The file related to the asset cannot be reproduced by iOS
-     */
-    ALMediaAssetTypeUnknown
+    ALMediaAssetTypeAudio
 };
 
 /**

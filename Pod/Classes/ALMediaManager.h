@@ -13,6 +13,33 @@
 #import "ALVideoRequestOptions.h"
 #import "ALFetchOptions.h"
 
+
+
+/** Notification sent when the manager finishes the media fetch */
+FOUNDATION_EXTERN NSString *const ALMediaManagerFetchMediaFinished;
+
+/** Notification sent when the manager finishes to retrieve image from asset */
+FOUNDATION_EXTERN NSString *const ALMediaManagerFetchImageFromAssetFinished;
+
+/** Notification sent when the manager finishes to retrieve player item from asset */
+FOUNDATION_EXTERN NSString *const ALMediaManagerFetchPlayerItemFromAssetFinished;
+
+
+
+/** The key used in the user info dictionary of NSNotification to store the array of assets */
+FOUNDATION_EXTERN NSString *const ALMediaManagerNotificationUserInfoAssetsKey;
+
+/** The key used in the user info dictionary of NSNotification to store the media type of the asset. It store a ALMediaAssetType value in a NSNumber object */
+FOUNDATION_EXTERN NSString *const ALMediaManagerNotificationUserInfoAssetTypeKey;
+
+/** The key used in the user info dictionary of NSNotification to store the result image from the method @a imageFromAsset */
+FOUNDATION_EXTERN NSString *const ALMediaManagerNotificationUserInfoAssetImage;
+
+/** he key used in the user info dictionary of NSNotification to store the result player item from the method @a playerItemFromAsset */
+FOUNDATION_EXTERN NSString *const ALMediaManagerNotificationUserInfoAssetPlayerItem;
+
+
+
 /**
  *  @brief  Enumeration for errors
  */
@@ -22,6 +49,8 @@ typedef NS_ENUM(NSInteger, ALMediaManagerError){
      */
     ALMediaManagerErrorEmptyArray
 };
+
+
 
 /**
  *  @brief  Represents the content mode for the image
@@ -40,6 +69,8 @@ typedef NS_ENUM(NSInteger, ALImageContentMode){
      */
     ALImageContentModeAspetctFill = 1
 };
+
+
 
 /**
  *  @brief  Describes the authorization status
@@ -65,43 +96,81 @@ typedef NS_ENUM(NSInteger, ALLibraryAuthorizationStatus){
     ALLibraryAuthorizationStatusAuthorized
 };
 
+
+
  /** A Boolean value indicating whether the photo asset data is stored on the local device or must be downloaded from iCloud. (NSNumber) */
 FOUNDATION_EXTERN NSString *const ALPhotoInfoIsInCloud;
+
 /** A Boolean value indicating whether the result image is a low-quality substitute for the requested image. (NSNumber) */
 FOUNDATION_EXTERN NSString *const ALPhotoInfoIsDegraded;
+
 /** A unique identifier for the image request. (NSNumber) */
 FOUNDATION_EXTERN NSString *const ALPhotoInfoRequestID;
+
 /** A Boolean value indicating whether the image request was canceled. (NSNumber) */
 FOUNDATION_EXTERN NSString *const ALPhotoInfoCancelled;
+
 /** An error that occurred when Photos attempted to load the image. (NSError) */
 FOUNDATION_EXTERN NSString *const ALPhotoInfoError;
 
+
+
 /** Maximum size available for the photo */
 FOUNDATION_EXTERN CGSize ALPhotoSizeMaximum;
+
 /** A 50x50 thumbnail */
 FOUNDATION_EXTERN CGSize ALPhotoSizeThumbnailSmall;
+
 /** A 100x100 thumbnail */
 FOUNDATION_EXTERN CGSize ALPhotoSizeThumbnailMedium;
+
 /** A 200x200 thumbnail */
 FOUNDATION_EXTERN CGSize ALPhotoSizeThumbnailLarge;
 
+
+
 /** A block used in the -imageForAsset:asset:size:contentMode:options:completionBlock */
 typedef void (^ ALImageRequestCompletionBlock)(UIImage *image, NSDictionary *info);
+
 /** A block used in the -playerItemForAsset:asset:options:completionBlock */
 typedef void (^ ALVideoRequestCompletionBlock)(AVPlayerItem *playerItem, NSDictionary *info);
 
+
+
+/**
+ *  @brief  This is the delegate of the ALMediaManager object
+ */
 @protocol ALMediaManagerDelegate <NSObject>
 
-@optional
-- (void)didFinishFetchMedia:(NSArray *)assets;
+/**
+ *  @brief  This method is called when the manager finishes the media asset fetching
+ *
+ *  @param assets The array containing the @a ALMediaAsset objects
+ *  @param type   The type of the assets (@a ALMediaAssetType)
+ *  @see   didFinishRetrieveImageAsset:image
+ *         didFinishRetrieveVideoAsset:playerItem
+ */
+- (void)didFinishFetchMedia:(NSArray *)assets ofType:(ALMediaAssetType)type;
+
+/**
+ *  @brief  Called when the manager finishes to retrieve the image from the asset with @a imageFromAsset method
+ *
+ *  @param image The resulting image
+ *  @see   didFinishRetrieveVideoAsset:playerItem
+ */
+- (void)didFinishRetrieveImageAsset:(UIImage *)image;
+
+/**
+ *  @brief  Called when the manager finishes to retrieve the player item from the asset in @a playerItemFromAsset method
+ *
+ *  @param playerItem The player item object related to the video asset (AVPlayerItem)
+ *  @see   didFinishRetrieveImageAsset:image
+ */
+- (void)didFinishRetrieveVideoAsset:(AVPlayerItem *)playerItem;
 
 @end
 
-@interface ALMediaManagerOptions : NSObject
 
-
-
-@end
 
 /**
  * This is the main class you use to retrieve photos and videos.
@@ -114,6 +183,12 @@ typedef void (^ ALVideoRequestCompletionBlock)(AVPlayerItem *playerItem, NSDicti
  *  @return The singleton instance
  */
 + (ALMediaManager *)sharedManager;
+
+/**
+ *  @brief    Set this property to YES allow to listen the notification when fetch of photos and videos is finished. This property is set to NO by default
+ *  @remarks  To set this property to YES doesn't disable the callbackBlock or the delegate (if you set it). So, if you want only NSNotificationCenter, pass nil to the callbackBlock of allPhotos and allVideos. The @a assets array will be passed into the user info of the notification object, with the key @a ALMediaManagerNotificationUserInfoAssetsKey and the media type of the fetch in question will be at the key @a ALMediaManagerNotificationUserInfoAssetTypeKey as a @a ALMediaAssetType struct stored in @a NSNumber object, so you can compare its @a integerValue with @a ALMediaType options
+ */
+@property (nonatomic, assign) BOOL useNSNotificationCenter;
 
 /**
  *  The photos array. This property is updated every time you call -allPhotosWithOptions:options:callbackBlock:
@@ -169,7 +244,7 @@ typedef void (^ ALVideoRequestCompletionBlock)(AVPlayerItem *playerItem, NSDicti
                  size:(CGSize)size
           contentMode:(ALImageContentMode)contentMode
               options:(ALImageRequestOptions *)options
-      completionBlock:(ALImageRequestCompletionBlock)callbackBlock;
+      completionBlock:(ALImageRequestCompletionBlock)completionBlock;
 
 /**
  *  This method retrieve the AVPlayerItem object relative to a given video asset (ALMediaAsset object).

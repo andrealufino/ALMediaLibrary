@@ -8,11 +8,20 @@
 
 #import "ALMediaManager.h"
 
-NSString *const ALPhotoInfoIsInCloud     = @"ALPhotoInfoIsInCloud";
-NSString *const ALPhotoInfoIsDegraded    = @"ALPhotoInfoIsDegraded";
-NSString *const ALPhotoInfoRequestID     = @"ALPhotoInfoRequestID";
-NSString *const ALPhotoInfoCancelled     = @"ALPhotoInfoCancelled";
-NSString *const ALPhotoInfoError         = @"ALPhotoInfoError";
+NSString *const ALMediaManagerFetchMediaFinished                  = @"ALMediaManagerFetchMediaFinished";
+NSString *const ALMediaManagerFetchImageFromAssetFinished         = @"ALMediaManagerFetchImageFromAssetFinished";
+NSString *const ALMediaManagerFetchPlayerItemFromAssetFinished    = @"ALMediaManagerFetchPlayerItemFromAssetFinished";
+
+NSString *const ALMediaManagerNotificationUserInfoAssetsKey       = @"ALMediaManagerNotificationUserInfoAssetsKey";
+NSString *const ALMediaManagerNotificationUserInfoAssetTypeKey    = @"ALMediaManagerNotificationUserInfoAssetTypeKey";
+NSString *const ALMediaManagerNotificationUserInfoAssetImage      = @"ALMediaManagerNotificationUserInfoAssetImage";
+NSString *const ALMediaManagerNotificationUserInfoAssetPlayerItem = @"ALMediaManagerNotificationUserInfoAssetPlayerItem";
+
+NSString *const ALPhotoInfoIsInCloud                              = @"ALPhotoInfoIsInCloud";
+NSString *const ALPhotoInfoIsDegraded                             = @"ALPhotoInfoIsDegraded";
+NSString *const ALPhotoInfoRequestID                              = @"ALPhotoInfoRequestID";
+NSString *const ALPhotoInfoCancelled                              = @"ALPhotoInfoCancelled";
+NSString *const ALPhotoInfoError                                  = @"ALPhotoInfoError";
 
 CGSize ALPhotoSizeMaximum;
 CGSize ALPhotoSizeThumbnailSmall;
@@ -20,6 +29,8 @@ CGSize ALPhotoSizeThumbnailMedium;
 CGSize ALPhotoSizeThumbnailLarge;
 
 @interface ALMediaManager ()
+
+- (NSNotificationCenter *)notificationCenter;
 
 @end
 
@@ -52,11 +63,17 @@ CGSize ALPhotoSizeThumbnailLarge;
     if (self) {
         _photos = [NSMutableArray new];
         _videos = [NSMutableArray new];
+        
+        _useNSNotificationCenter = NO;
     }
     return self;
 }
 
 #pragma mark - Private methods
+
+- (NSNotificationCenter *)notificationCenter {
+    return [NSNotificationCenter defaultCenter];
+}
 
 #pragma mark - Fetch photos
 
@@ -101,7 +118,19 @@ CGSize ALPhotoSizeThumbnailLarge;
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self.delegate didFinishFetchMedia:allMedia];
+                // If delegate is setted call didFinishMedia:
+                if (self.delegate) {
+                    [self.delegate didFinishFetchMedia:allMedia ofType:(NSInteger)mediaType];
+                }
+                // If programmer want to use notifications and set useNSNotificationCenter to YES, send notification
+                if (self.useNSNotificationCenter) {
+                    [[NSNotificationCenter defaultCenter] postNotificationName:ALMediaManagerFetchMediaFinished
+                                                                        object:self
+                                                                      userInfo:@{
+                                                                                 ALMediaManagerNotificationUserInfoAssetsKey: allMedia,
+                                                                                 ALMediaManagerNotificationUserInfoAssetTypeKey: @(mediaType)
+                                                                                 }];
+                }
                 callbackBlock ? callbackBlock([allMedia copy], nil) : nil;
             });
             NSLog(@"There are %li assets", (unsigned long)allMedia.count);
@@ -199,14 +228,23 @@ CGSize ALPhotoSizeThumbnailLarge;
                  size:(CGSize)size
           contentMode:(ALImageContentMode)contentMode
               options:(ALImageRequestOptions *)options
-      completionBlock:(ALImageRequestCompletionBlock)callbackBlock {
+      completionBlock:(ALImageRequestCompletionBlock)completionBlock {
     
     [[PHImageManager defaultManager] requestImageForAsset:asset.asset
                                                targetSize:size
                                               contentMode:(int)contentMode
                                                   options:[self convertFromALImageRequestOptions:options]
                                             resultHandler:^(UIImage *result, NSDictionary *info) {
-                                                callbackBlock(result, [self wrapPHDictionaryToALDictionary:info]);
+                                                completionBlock ? completionBlock(result, [self wrapPHDictionaryToALDictionary:info]) : nil;
+                                                if (self.delegate)
+                                                    [self.delegate didFinishRetrieveImageAsset:result];
+                                                if (self.useNSNotificationCenter) {
+                                                    [[self notificationCenter] postNotificationName:ALMediaManagerFetchImageFromAssetFinished
+                                                                                             object:self
+                                                                                           userInfo:@{
+                                                                                                      ALMediaManagerNotificationUserInfoAssetImage: result
+                                                                                                      }];
+                                                }
                                             }];
 }
 
@@ -215,10 +253,20 @@ CGSize ALPhotoSizeThumbnailLarge;
 - (PHImageRequestID)playerItemForAsset:(ALMediaAsset *)asset
                                options:(ALVideoRequestOptions *)options
                        completionBlock:(ALVideoRequestCompletionBlock)completionBlock {
+    
     PHImageRequestID requestID = [[PHImageManager defaultManager] requestPlayerItemForVideo:asset.asset
                                                                                     options:[self convertFromALVideoRequestOptions:options]
                                                                                resultHandler:^(AVPlayerItem *playerItem, NSDictionary *info) {
-                                                                                   completionBlock(playerItem, info);
+                                                                                   completionBlock ? completionBlock(playerItem, info) : nil;
+                                                                                   if (self.delegate)
+                                                                                       [self.delegate didFinishRetrieveVideoAsset:playerItem];
+                                                                                   if (self.useNSNotificationCenter) {
+                                                                                       [[self notificationCenter] postNotificationName:ALMediaManagerFetchPlayerItemFromAssetFinished
+                                                                                                                                object:self
+                                                                                                                              userInfo:@{
+                                                                                                                                         ALMediaManagerNotificationUserInfoAssetPlayerItem: playerItem
+                                                                                                                                         }];
+                                                                                   }
                                                                                }];
     
     return requestID;

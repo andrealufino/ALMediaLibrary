@@ -11,5 +11,5 @@
 // This library does not follow semantic-versioning,
 // so we were not able to define version macros.
 // Please contact the author.
-// Version: 0.1.2b.
+// Version: 0.1.3b.
 

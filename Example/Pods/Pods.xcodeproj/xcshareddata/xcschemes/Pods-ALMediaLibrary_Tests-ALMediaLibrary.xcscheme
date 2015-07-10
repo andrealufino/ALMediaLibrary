@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2FAD78F14740467371DA8A8A"
+               BlueprintIdentifier = "C934DEEB4D3DEC90A8E21F8E"
                BuildableName = "ALMediaLibrary.framework"
                BlueprintName = "Pods-ALMediaLibrary_Tests-ALMediaLibrary"
                ReferencedContainer = "container:Pods.xcodeproj">
